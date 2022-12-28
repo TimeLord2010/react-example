@@ -1,10 +1,11 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
+import { NavigationBar } from "../components/NavigationBar"
 import "./UserList.css"
 
 export function UserList() {
     const [users, setUsers] = useState([] as any[])
-    let [page, setPage] = useState(1)
+    let [page, setPage] = useState(0)
     const [count, setCount] = useState(0)
     const totalPages = 10
     useEffect(() => {
@@ -17,7 +18,6 @@ export function UserList() {
                 },
                 results,
             } = response.data
-            setPage(page)
             setCount(itemsCount)
             const arr = []
             for (let i = 0; i < results.length; i++) {
@@ -49,8 +49,24 @@ export function UserList() {
         }
         func()
     }, [page])
+
+    function handleNext() {
+        if (page + 1 >= totalPages) {
+            return
+        }
+        setPage(page + 1)
+    }
+
+    function handlePrevious() {
+        if (page == 0) {
+            return
+        }
+        setPage(page - 1)
+    }
+
     return (
         <div>
+            <NavigationBar />
             <table>
                 <thead>
                     <tr>
@@ -76,11 +92,11 @@ export function UserList() {
                     justifyContent: "center",
                     textAlign: "center",
                 }}>
-                    <button>Previous</button>
-                    <button>Next</button>
+                    <button onClick={handlePrevious} disabled={page <= 0}>Previous</button>
+                    <button onClick={handleNext} disabled={page >= totalPages - 1}>Next</button>
                 </div>
                 <div>
-                    {page} / {totalPages}
+                    {page + 1} / {totalPages}
                 </div>
             </div>
         </div>

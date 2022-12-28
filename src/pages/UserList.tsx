@@ -48,7 +48,7 @@ export function UserList() {
             setUsers(arr)
         }
         func()
-    }, [])
+    }, [page])
     return (
         <div>
             <table>
